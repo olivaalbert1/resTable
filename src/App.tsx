@@ -1,13 +1,13 @@
-// import { useState } from 'react'
+import Layout from "./layout"
+import DataTable from "./view/DataTable"
 import './assets/css/app.css'
 
 function App() {
-  // const [count, setCount] = useState(0)
 
   return (
-    <div className="App">
-      <div>Hello world</div>
-    </div>
+    <Layout>
+      <DataTable />
+    </Layout>
   )
 }
 
