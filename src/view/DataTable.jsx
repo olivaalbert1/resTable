@@ -6,11 +6,12 @@ export const DataTable = () => {
     const [data, setData] = React.useState(defaultData);
 
     const columns = [
+        { accessorKey: "visited" },
         { accessorKey: "name" },
         { accessorKey: "address" },
         { accessorKey: "comments" },
-        { accessorKey: "visited" }
-
+        { accessorKey: "maps" },
+        { accessorKey: "lastUpdate" }
     ]
 
     const table = useReactTable(
