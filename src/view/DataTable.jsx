@@ -100,6 +100,9 @@ export const DataTable = () => {
                         {'>>'}
                     </button>
                 </div>
+                <div className="text-gray-600 font-semibold">
+                    {Number(table.getRowModel().rows[0].id) + 1} - {Number(table.getRowModel().rows[table.getRowModel().rows.length - 1].id) + 1} of {Number(defaultData.length)}
+                </div>
             </div>
         </div>
     )
