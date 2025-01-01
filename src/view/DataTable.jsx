@@ -6,12 +6,36 @@ export const DataTable = () => {
     const [data, setData] = React.useState(defaultData);
 
     const columns = [
-        { accessorKey: "visited" },
-        { accessorKey: "name" },
-        { accessorKey: "address" },
-        { accessorKey: "comments" },
-        { accessorKey: "maps" },
-        { accessorKey: "lastUpdate" }
+        {
+            accessorKey: "visited",
+            header: () => <span>Visitado</span>
+        },
+        {
+            accessorKey: "name",
+            header: () => <span>Nombre</span>,
+            cell: info => <span className="font-bold">{info.getValue()}</span>
+        },
+        {
+            accessorKey: "address",
+            header: () => <span>Dirección</span>
+        },
+        {
+            accessorKey: "comments",
+            header: () => <span>Comentarios</span>
+        },
+        {
+            accessorKey: "maps",
+            header: () => <span>Maps</span>,
+            cell: info => <a href={info.getValue()} target="_blank" rel="noreferrer">Ver en Maps</a>
+        },
+        {
+            accessorKey: "lastUpdate",
+            header: () => <span>Última actualización</span>,
+            cell: info => {
+                const date = new Date(info.getValue());
+                return <span>{date.toLocaleDateString()} {date.toLocaleTimeString()}</span>
+            }
+        }
     ]
 
     const table = useReactTable(
@@ -104,7 +128,7 @@ export const DataTable = () => {
                     {Number(table.getRowModel().rows[0].id) + 1} - {Number(table.getRowModel().rows[table.getRowModel().rows.length - 1].id) + 1} de {Number(defaultData.length)}
                 </div>
                 <select className="text-gray-600 border border-gray-300 rounded outline-indigo-700"
-                onChange={(e) => table.setPageSize(Number(e.target.value))}
+                    onChange={(e) => table.setPageSize(Number(e.target.value))}
                 >
                     <option value="5">5</option>
                     <option value="10">10</option>
