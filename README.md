@@ -9,9 +9,10 @@ This web application provides a directory of restaurants that offer gluten-free 
 * Vite
 * Node.js
 * Tailwind
-* MongoDB
+* Google Spreadsheet (as a DB)
 * Classnames
 * TanStack
+* Google Places API
 
 **Installation:**
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
