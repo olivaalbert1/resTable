@@ -45,9 +45,9 @@ export const DataTable = () => {
                 
                 <tbody>
                     {table.getRowModel().rows.map((rows) => (
-                        <tr key={rows.id}>
+                        <tr key={rows.id} className="text-gray-600 hover:bg-slate-100">
                             {rows.getVisibleCells().map((cell) => (
-                                <td key={cell.id}>
+                                <td key={cell.id} className="py-2 px-4">
                                     {flexRender(
                                         cell.column.columnDef.cell,
                                         cell.getContext()
