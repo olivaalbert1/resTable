@@ -26,9 +26,9 @@ export const DataTable = () => {
             <table className="table-auto w-full">
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <tr key={headerGroup.id}>
+                        <tr key={headerGroup.id} className="border-b border-gray-300 text-gray-600 bg-gray-100">
                             {headerGroup.headers.map((header) => (
-                                <th key={header.id}>
+                                <th key={header.id} className="py-2 px-4 text-left uppercase">
                                     {
                                         header.isPlaceholder
                                             ? null
@@ -44,7 +44,19 @@ export const DataTable = () => {
                 </thead>
                 
                 <tbody>
-
+                    {table.getRowModel().rows.map((rows) => (
+                        <tr key={rows.id}>
+                            {rows.getVisibleCells().map((cell) => (
+                                <td key={cell.id}>
+                                    {flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext()
+                                    )}
+                                </td>
+                            ))}
+                        </tr>
+                    )
+                    )}
                 </tbody>
             </table>
         </div>
