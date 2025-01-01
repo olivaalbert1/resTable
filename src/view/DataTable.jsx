@@ -42,7 +42,7 @@ export const DataTable = () => {
                         </tr>
                     ))}
                 </thead>
-                
+
                 <tbody>
                     {table.getRowModel().rows.map((rows) => (
                         <tr key={rows.id} className="text-gray-600 hover:bg-slate-100">
@@ -59,6 +59,48 @@ export const DataTable = () => {
                     )}
                 </tbody>
             </table>
+
+            <div className="mt-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <button
+                        className="text-gray-600 bg-gray-200 py-0.5 px-1 rounded border border-gray-300 disabled:opacity-50"
+                        onClick={() => table.setPageIndex(0)}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        {'<<'}
+                    </button>
+                    <button
+                        className="text-gray-600 bg-gray-200 py-0.5 px-1 rounded border border-gray-300 disabled:opacity-50"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        {'<'}
+                    </button>
+                    {table.getPageOptions().map((page) => (
+                        <button
+                            key={page}
+                            className={`text-gray-600 bg-gray-200 py-0.5 px-1 rounded border border-gray-300 ${table.pageIndex === page ? 'bg-gray-400' : ''}`}
+                            onClick={() => table.setPageIndex(page)}
+                        >
+                            {page + 1}
+                        </button>
+                    ))}
+                    <button
+                        className="text-gray-600 bg-gray-200 py-0.5 px-1 rounded border border-gray-300 disabled:opacity-50"
+                        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        {'>'}
+                    </button>
+                    <button
+                        className="text-gray-600 bg-gray-200 py-0.5 px-1 rounded border border-gray-300 disabled:opacity-50"
+                        onClick={() => table.gotoPage(table.pageCount)}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        {'>>'}
+                    </button>
+                </div>
+            </div>
         </div>
     )
 }
