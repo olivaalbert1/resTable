@@ -101,8 +101,16 @@ export const DataTable = () => {
                     </button>
                 </div>
                 <div className="text-gray-600 font-semibold">
-                    {Number(table.getRowModel().rows[0].id) + 1} - {Number(table.getRowModel().rows[table.getRowModel().rows.length - 1].id) + 1} of {Number(defaultData.length)}
+                    {Number(table.getRowModel().rows[0].id) + 1} - {Number(table.getRowModel().rows[table.getRowModel().rows.length - 1].id) + 1} de {Number(defaultData.length)}
                 </div>
+                <select className="text-gray-600 border border-gray-300 rounded outline-indigo-700"
+                onChange={(e) => table.setPageSize(Number(e.target.value))}
+                >
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                </select>
             </div>
         </div>
     )
