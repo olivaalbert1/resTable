@@ -1,10 +1,20 @@
-import React from "react";
-import { flexRender, getCoreRowModel, useReactTable, getPaginationRowModel } from "@tanstack/react-table";
+import React, { useState } from "react";
+import { flexRender, getCoreRowModel, useReactTable, getPaginationRowModel, getFilteredRowModel } from "@tanstack/react-table";
+import { rankItem } from "@tanstack/match-sorter-utils"
 import { defaultData } from "../utils/defaultData";
+
+const fuzzyfilter = (rows, columnId, value, addMeta) => {
+    const itemRank = rankItem(rows.getValue(columnId), value);
+
+    addMeta({itemRank})
+
+    return itemRank.passed
+}
 
 export const DataTable = () => {
     const [data, setData] = React.useState(defaultData);
-
+    const [globalFilter, setGlobalFilter] = useState('')
+    console.log(globalFilter)
     const columns = [
         {
             accessorKey: "visited",
@@ -42,11 +52,25 @@ export const DataTable = () => {
         {
             data,
             columns,
+            state: {
+                globalFilter
+            },
             getCoreRowModel: getCoreRowModel({}),
-            getPaginationRowModel: getPaginationRowModel({})
+            getPaginationRowModel: getPaginationRowModel({}),
+            getFilteredRowModel: getFilteredRowModel(),
+            globalFilterFn: fuzzyfilter
         });
     return (
         <div className="py-6 px-4">
+            <div className="my-2 text-right">
+                <input
+                    type="text"
+                    className="p-2 text-gray-600 border border-gray-300 rounded outline-indigo-700"
+                    onChange={e => setGlobalFilter(e.target.value)}
+                    placeholder="Buscar..."
+                    />
+
+            </div>
             <table className="table-auto w-full">
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
