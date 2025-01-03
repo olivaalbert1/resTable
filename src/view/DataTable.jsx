@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { flexRender, getCoreRowModel, useReactTable, getPaginationRowModel, getFilteredRowModel } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils"
-import { defaultData } from "../utils/defaultData";
+// import { defaultData } from "../utils/defaultData";
+import { spreadSheetData } from "../utils/getData";
 
 const fuzzyfilter = (rows, columnId, value, addMeta) => {
     const itemRank = rankItem(rows.getValue(columnId), value);
@@ -11,10 +12,12 @@ const fuzzyfilter = (rows, columnId, value, addMeta) => {
     return itemRank.passed
 }
 
+let defaultData = await spreadSheetData();
+
 export const DataTable = () => {
     const [data, setData] = React.useState(defaultData);
     const [globalFilter, setGlobalFilter] = useState('')
-    console.log(globalFilter)
+    
     const columns = [
         {
             accessorKey: "visited",
@@ -154,7 +157,6 @@ export const DataTable = () => {
                 <select className="text-gray-600 border border-gray-300 rounded outline-indigo-700"
                     onChange={(e) => table.setPageSize(Number(e.target.value))}
                 >
-                    <option value="5">5</option>
                     <option value="10">10</option>
                     <option value="20">20</option>
                     <option value="30">30</option>
