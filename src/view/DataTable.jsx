@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { flexRender, getCoreRowModel, useReactTable, getPaginationRowModel, getFilteredRowModel } from "@tanstack/react-table";
+import { flexRender, getCoreRowModel, useReactTable, getPaginationRowModel, getFilteredRowModel, getSortedRowModel } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils"
 // import { defaultData } from "../utils/defaultData";
 import { spreadSheetData } from "../utils/getData";
+import classNames from "classnames";
 
 const fuzzyfilter = (rows, columnId, value, addMeta) => {
     const itemRank = rankItem(rows.getValue(columnId), value);
@@ -32,6 +33,14 @@ const DebouncedInput = ({ value: keyWord, onChange, ...props }) => {
 export const DataTable = () => {
     const [data, setData] = React.useState(defaultData);
     const [globalFilter, setGlobalFilter] = useState('')
+    // TODO:
+    // Add loading, error states and spinner and empty state
+    // const [loading, setLoading] = useState(true); // spinner
+    // const [error, setError] = useState(null); // error message
+    // empty state
+    // desplegable en el horario
+
+    const [sorting, setSorting] = useState([])
 
     const columns = [
         {
@@ -49,7 +58,8 @@ export const DataTable = () => {
         },
         {
             accessorKey: "comments",
-            header: () => <span>Comentarios</span>
+            header: () => <span>Comentarios</span>,
+            enableSorting: false
         },
         {
             accessorKey: "maps",
@@ -87,12 +97,15 @@ export const DataTable = () => {
             data,
             columns,
             state: {
-                globalFilter
+                globalFilter,
+                sorting
             },
             getCoreRowModel: getCoreRowModel({}),
             getPaginationRowModel: getPaginationRowModel({}),
             getFilteredRowModel: getFilteredRowModel(),
-            globalFilterFn: fuzzyfilter
+            globalFilterFn: fuzzyfilter,
+            getSortedRowModel: getSortedRowModel(),
+            onSortingChange: setSorting
         });
     return (
         <div className="py-6 px-4">
@@ -115,10 +128,23 @@ export const DataTable = () => {
                                     {
                                         header.isPlaceholder
                                             ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
+                                            :
+                                            <div className={classNames({
+                                                'cursor-pointer select-none': header.column.getCanSort()
+                                            })}
+                                                onClick={header.column.getToggleSortingHandler()
+                                                }>
+                                                {flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                                {header.column.getIsSorted() && (
+                                                    <span className="ml-1">
+                                                        {header.column.getIsSorted() ? '▼' : '▲'}
+                                                    </span>
+                                                )}
+                                            </div>
+                                    }
 
                                 </th>
                             ))}
