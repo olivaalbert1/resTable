@@ -66,6 +66,9 @@ export default tseslint.config({
 **Running the project:**
 Start the development server: `npm run dev`
 
+**TODO:**
+Add loading, error states and spinner, empty state, accordion in the hours and dark / light mode
+
 **Contributing:**
 Contributions are welcome. Please open an issue to discuss new features or improvements.
 

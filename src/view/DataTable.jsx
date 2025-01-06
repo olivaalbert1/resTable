@@ -3,6 +3,7 @@ import { flexRender, getCoreRowModel, useReactTable, getPaginationRowModel, getF
 import { rankItem } from "@tanstack/match-sorter-utils"
 // import { defaultData } from "../utils/defaultData";
 import { spreadSheetData } from "../utils/getData";
+import { getDistancia } from "../utils/getDistancia";
 import classNames from "classnames";
 
 const fuzzyfilter = (rows, columnId, value, addMeta) => {
@@ -33,12 +34,6 @@ const DebouncedInput = ({ value: keyWord, onChange, ...props }) => {
 export const DataTable = () => {
     const [data, setData] = React.useState(defaultData);
     const [globalFilter, setGlobalFilter] = useState('')
-    // TODO:
-    // Add loading, error states and spinner and empty state
-    // const [loading, setLoading] = useState(true); // spinner
-    // const [error, setError] = useState(null); // error message
-    // empty state
-    // desplegable en el horario
 
     const [sorting, setSorting] = useState([])
 
@@ -64,7 +59,10 @@ export const DataTable = () => {
         {
             accessorKey: "maps",
             header: () => <span>Maps</span>,
-            cell: info => <a href={info.getValue()} target="_blank" rel="noreferrer">Ver en Maps</a>
+            cell: info => {
+                let distancia = getDistancia(info.getValue());
+                return <a href={info.getValue()} target="_blank" rel="noreferrer">{distancia.latitud},{distancia.longitud}</a>
+            }
         },
         {
             accessorKey: "lastUpdate",
@@ -73,6 +71,20 @@ export const DataTable = () => {
                 const date = new Date(info.getValue());
                 return <span>{date.toLocaleDateString()} {date.toLocaleTimeString()}</span>
             }
+        },
+        {
+            accessorKey: "hours",
+            header: () => <span>Horario</span>,
+            // cell: info => {
+            //     const hours = info.getValue();
+            //     return <div>
+            //         {hours.map((hour, index) => (
+            //             <div key={index}>
+            //                 {hour.days}: {hour.hours}
+            //             </div>
+            //         ))}
+            //     </div>
+            // }
         }
     ]
 
@@ -119,10 +131,10 @@ export const DataTable = () => {
                 />
 
             </div>
-            <table className="table-auto w-full">
+            <table className="bg-gray-900 table-auto w-full">
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <tr key={headerGroup.id} className="border-b border-gray-300 text-gray-600 bg-gray-100">
+                        <tr key={headerGroup.id} className="bg-gray-900 border-b border-gray-300 text-gray-600 bg-gray-100">
                             {headerGroup.headers.map((header) => (
                                 <th key={header.id} className="py-2 px-4 text-left uppercase">
                                     {
