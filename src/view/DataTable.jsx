@@ -66,6 +66,22 @@ export const DataTable = () => {
         }
     ]
 
+    const getStateTable = () => {
+        const totalRows = table.getFilteredRowModel().rows.length;
+        const pageSize = table.getState().pagination.pageSize;
+        const pageIndex = table.getState().pagination.pageIndex;
+        const rowsPerPage = table.getRowModel().rows.length;
+
+        const firstIndex = (pageIndex * pageSize) + 1;
+        const lastIndex = (pageIndex * pageSize) + rowsPerPage;
+
+        return {
+            totalRows,
+            firstIndex,
+            lastIndex
+        }
+    }
+
     const table = useReactTable(
         {
             data,
@@ -168,7 +184,7 @@ export const DataTable = () => {
                     </button>
                 </div>
                 <div className="text-gray-600 font-semibold">
-                    {Number(table.getRowModel().rows[0].id) + 1} - {Number(table.getRowModel().rows[table.getRowModel().rows.length - 1].id) + 1} de {Number(defaultData.length)}
+                    {getStateTable().firstIndex} - {getStateTable().lastIndex} de {getStateTable().totalRows}
                 </div>
                 <select className="text-gray-600 border border-gray-300 rounded outline-indigo-700"
                     onChange={(e) => table.setPageSize(Number(e.target.value))}
