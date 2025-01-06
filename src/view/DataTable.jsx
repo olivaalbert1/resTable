@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { flexRender, getCoreRowModel, useReactTable, getPaginationRowModel, getFilteredRowModel } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils"
 // import { defaultData } from "../utils/defaultData";
@@ -7,17 +7,32 @@ import { spreadSheetData } from "../utils/getData";
 const fuzzyfilter = (rows, columnId, value, addMeta) => {
     const itemRank = rankItem(rows.getValue(columnId), value);
 
-    addMeta({itemRank})
+    addMeta({ itemRank })
 
     return itemRank.passed
 }
 
 let defaultData = await spreadSheetData();
 
+const DebouncedInput = ({ value: keyWord, onChange, ...props }) => {
+    const [value, setValue] = useState(keyWord);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            onChange(value);
+        }, 500);
+        return () => clearTimeout(timeout);
+    }, [value])
+
+    return (
+        <input {...props} value={value} onChange={e => setValue(e.target.value)} />
+    )
+}
+
 export const DataTable = () => {
     const [data, setData] = React.useState(defaultData);
     const [globalFilter, setGlobalFilter] = useState('')
-    
+
     const columns = [
         {
             accessorKey: "visited",
@@ -66,12 +81,13 @@ export const DataTable = () => {
     return (
         <div className="py-6 px-4">
             <div className="my-2 text-right">
-                <input
+                <DebouncedInput
                     type="text"
+                    value={globalFilter ?? ''}
                     className="p-2 text-gray-600 border border-gray-300 rounded outline-indigo-700"
-                    onChange={e => setGlobalFilter(e.target.value)}
+                    onChange={value => setGlobalFilter(String(value))}
                     placeholder="Buscar..."
-                    />
+                />
 
             </div>
             <table className="table-auto w-full">
