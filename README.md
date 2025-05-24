@@ -1,11 +1,14 @@
-# ResTable with React + TypeScript + Vite + TanStack
+# ResTable with React + TypeScript + JavaScript + Vite + TanStack
 
 **Description:**
 This web application provides a directory of restaurants that offer gluten-free options, specifically designed for people with celiac disease. Users can search and filter restaurants by location, hours, and other relevant features.
 
+![Screenshot](/src/assets/Screenshot.png)
+
 **Technologies:**
 * React
 * TypeScript
+* JavaScript
 * Vite
 * Node.js
 * Tailwind
