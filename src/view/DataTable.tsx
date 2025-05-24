@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { flexRender, getCoreRowModel, useReactTable, getPaginationRowModel, getFilteredRowModel, getSortedRowModel } from "@tanstack/react-table";
+import React, { useEffect, useMemo, useState } from "react";
+import { flexRender, getCoreRowModel, useReactTable, getPaginationRowModel, getFilteredRowModel, getSortedRowModel, ColumnDef } from "@tanstack/react-table";
 import { rankItem } from "@tanstack/match-sorter-utils"
-// import { defaultData } from "../utils/defaultData";
-import { spreadSheetData } from "../utils/getData";
-import { getDistancia } from "../utils/getDistancia";
+import { dataDefault } from '../utils/dataDefault.ts'
+// import { spreadSheetData } from "../utils/getData.ts";
+import { getDistancia } from "../utils/getDistancia.ts"
 import classNames from "classnames";
 
-const fuzzyfilter = (rows, columnId, value, addMeta) => {
+const fuzzyfilter = (rows: any, columnId: any, value: any, addMeta: any) => {
     const itemRank = rankItem(rows.getValue(columnId), value);
 
     addMeta({ itemRank })
@@ -14,9 +14,19 @@ const fuzzyfilter = (rows, columnId, value, addMeta) => {
     return itemRank.passed
 }
 
-let defaultData = await spreadSheetData();
+interface SpreadSheetData {
+    visited: string;
+    name: string;
+    address: string;
+    comments: string;
+    maps: string;
+    lastUpdate: string;
+    hours: any;
+}
 
-const DebouncedInput = ({ value: keyWord, onChange, ...props }) => {
+const defaultData: SpreadSheetData[] = dataDefault;
+
+const DebouncedInput = ({ value: keyWord, onChange, ...props }: any) => {
     const [value, setValue] = useState(keyWord);
 
     useEffect(() => {
@@ -32,12 +42,12 @@ const DebouncedInput = ({ value: keyWord, onChange, ...props }) => {
 }
 
 export const DataTable = () => {
-    const [data, setData] = React.useState(defaultData);
+    const [data] = React.useState(defaultData);
     const [globalFilter, setGlobalFilter] = useState('')
 
-    const [sorting, setSorting] = useState([])
+    const [sorting] = useState([])
 
-    const columns = [
+    const columns: ColumnDef<SpreadSheetData>[] = useMemo(() => [
         {
             accessorKey: "visited",
             header: () => <span>Visitado</span>
@@ -45,7 +55,8 @@ export const DataTable = () => {
         {
             accessorKey: "name",
             header: () => <span>Nombre</span>,
-            cell: info => <span className="font-bold">{info.getValue()}</span>
+            cell: ({ info }: any) => <span className="font-bold">{info}</span>
+            // cell: ({ info }: any) => <span className="font-bold">{info}</span>
         },
         {
             accessorKey: "address",
@@ -59,34 +70,32 @@ export const DataTable = () => {
         {
             accessorKey: "maps",
             header: () => <span>Maps</span>,
-            cell: info => {
-                let distancia = getDistancia(info.getValue());
-                return <a href={info.getValue()} target="_blank" rel="noreferrer">{distancia.latitud},{distancia.longitud}</a>
+            cell: ({ info }: any) => {
+                // let distancia = getDistancia(info);
+                let distancia = info
+                // return <a href={info} target="_blank" rel="noreferrer">{distancia.latitud},{distancia.longitud}</a>
+                return <a href={info} target="_blank" rel="noreferrer">{distancia}</a>
             }
         },
         {
             accessorKey: "lastUpdate",
             header: () => <span>Última actualización</span>,
-            cell: info => {
-                const date = new Date(info.getValue());
-                return <span>{date.toLocaleDateString()} {date.toLocaleTimeString()}</span>
+            cell: ({ info }: any) => {
+                const date = new Date(info);
+                return <span>{date.toLocaleDateString()}</span>
             }
         },
         {
             accessorKey: "hours",
             header: () => <span>Horario</span>,
-            // cell: info => {
-            //     const hours = info.getValue();
-            //     return <div>
-            //         {hours.map((hour, index) => (
-            //             <div key={index}>
-            //                 {hour.days}: {hour.hours}
-            //             </div>
-            //         ))}
-            //     </div>
-            // }
+            cell: ({ info }: any) => {
+                const hours = info;
+                return <div>
+                    {hours}
+                </div>
+            }
         }
-    ]
+    ], [])
 
     const getStateTable = () => {
         const totalRows = table.getFilteredRowModel().rows.length;
@@ -112,12 +121,12 @@ export const DataTable = () => {
                 globalFilter,
                 sorting
             },
-            getCoreRowModel: getCoreRowModel({}),
-            getPaginationRowModel: getPaginationRowModel({}),
+            getCoreRowModel: getCoreRowModel(),
+            getPaginationRowModel: getPaginationRowModel(),
             getFilteredRowModel: getFilteredRowModel(),
             globalFilterFn: fuzzyfilter,
             getSortedRowModel: getSortedRowModel(),
-            onSortingChange: setSorting
+            onSortingChange: (setSorting) => setSorting
         });
     return (
         <div className="py-6 px-4">
@@ -126,7 +135,7 @@ export const DataTable = () => {
                     type="text"
                     value={globalFilter ?? ''}
                     className="p-2 text-gray-600 border border-gray-300 rounded outline-indigo-700"
-                    onChange={value => setGlobalFilter(String(value))}
+                    onChange={({ value }: any) => setGlobalFilter(String(value))}
                     placeholder="Buscar..."
                 />
 
@@ -157,7 +166,6 @@ export const DataTable = () => {
                                                 )}
                                             </div>
                                     }
-
                                 </th>
                             ))}
                         </tr>
@@ -200,7 +208,8 @@ export const DataTable = () => {
                     {table.getPageOptions().map((page) => (
                         <button
                             key={page}
-                            className={`text-gray-600 bg-gray-200 py-0.5 px-1 rounded border border-gray-300 ${table.pageIndex === page ? 'bg-gray-400' : ''}`}
+                            // className={`text-gray-600 bg-gray-200 py-0.5 px-1 rounded border border-gray-300 ${table.pageIndex === page ? 'bg-gray-400' : ''}`}
+                            className={`text-gray-600 bg-gray-200 py-0.5 px-1 rounded border border-gray-300`}
                             onClick={() => table.setPageIndex(page)}
                         >
                             {page + 1}
@@ -208,14 +217,15 @@ export const DataTable = () => {
                     ))}
                     <button
                         className="text-gray-600 bg-gray-200 py-0.5 px-1 rounded border border-gray-300 disabled:opacity-50"
-                        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                        onClick={(): any => table.setPageIndex(table.getPageCount() - 1)}
                         disabled={!table.getCanNextPage()}
                     >
                         {'>'}
                     </button>
                     <button
                         className="text-gray-600 bg-gray-200 py-0.5 px-1 rounded border border-gray-300 disabled:opacity-50"
-                        onClick={() => table.gotoPage(table.pageCount)}
+                        // onClick={(): any => table.gotoPage(table.pageCount)}
+                        onClick={(): any => table.setPageIndex(table.getPageCount() - 1)}
                         disabled={!table.getCanNextPage()}
                     >
                         {'>>'}
@@ -235,4 +245,3 @@ export const DataTable = () => {
         </div>
     )
 }
-

@@ -1,6 +1,4 @@
-import React from "react";
-
-export const Layout = (props) => {
+const Layout = (props:any) => {
     return (
         <div>
             <header className="bg-gray-900">
@@ -16,3 +14,5 @@ export const Layout = (props) => {
         </div>
     );
 }
+
+export default Layout;
