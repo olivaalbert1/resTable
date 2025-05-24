@@ -1,13 +1,14 @@
-# ResTable with React + TypeScript + JavaScript + Vite + TanStack
+# ResTable with React + JavaScript + Vite + TanStack
 
 **Description:**
 This web application provides a directory of restaurants that offer gluten-free options, specifically designed for people with celiac disease. Users can search and filter restaurants by location, hours, and other relevant features.
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2a0aa877-e070-425c-a210-5aebcfb6d2e2/deploy-status)](https://app.netlify.com/projects/restable/deploys)
 
 ![Screenshot](/src/assets/Screenshot.png)
 
 **Technologies:**
 * React
-* TypeScript
 * JavaScript
 * Vite
 * Node.js
